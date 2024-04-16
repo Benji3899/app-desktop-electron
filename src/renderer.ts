@@ -27,8 +27,26 @@
  */
 import { createApp } from 'vue';
 import ChatScreen from './screen/ChatScreen.vue';
+import './index.css';
+
 createApp(ChatScreen).mount('#root')
 
-import './index.css';
+const socket = new WebSocket("ws://localhost:3000");
+
+socket.addEventListener("open", ()=> {
+    console.log("Connected to server");
+});
+
+socket.addEventListener("message", (event)=>{
+    console.log("Received message:", event.data);
+});
+
+socket.addEventListener("close", ()=>{
+    console.log("Disconnect from server");
+});
+
+socket.addEventListener("error", (error)=>{
+    console.error("An error occurred:", error);
+});
 
 console.log('👋 This message is being logged by "renderer.ts", included via Vite');
