@@ -1,0 +1,23 @@
+<template>
+  <div class="message-list">
+    <ul>
+      <li v-for="(message, index) in messages" :key="index">
+        {{ message.content }}
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    messages: {
+      type: Array,
+      default: () => []
+    }
+  }
+};
+</script>
+
+
+<style scoped></style>

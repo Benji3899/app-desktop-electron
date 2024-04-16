@@ -25,6 +25,9 @@
  *  });
  * ```
  */
+import { createApp } from 'vue';
+import ChatScreen from './screen/ChatScreen.vue';
+createApp(ChatScreen).mount('#root')
 
 import './index.css';
 
