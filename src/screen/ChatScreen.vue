@@ -1,6 +1,9 @@
 <template>
   <div>
+    <!-- Composant pour afficher la liste des messages -->
     <message-list :messages="messages" />
+
+    <!-- Composant pour saisir et envoyer un nouveau message -->
     <message-input @message-sent="handleMessageSent" />
   </div>
 </template>
@@ -8,25 +11,44 @@
 <script>
 import MessageList from '../components/MessageList.vue';
 import MessageInput from '../components/MessageInput.vue';
+import { inject } from 'vue';
 
 export default {
+  mounted() {
+    const ipc = inject('ipc'); // Récupère la connexion IPC fourni par IpcProvider
+
+    // Écoute des messages IPC du processus principal
+    window.IPC.onMessageFromMain((message) => {
+      console.log("Received message from main:", message);
+      // Gère le message reçu du processus principal
+
+      this.messages.push({ content: message });
+    });
+  },
   components: {
     MessageList,
     MessageInput
   },
   data() {
     return {
-      messages: [] // Stocke la liste des messages
+      messages: [] // Initialise la liste des messages
     };
   },
+
   methods: {
     handleMessageSent(message) {
-      this.messages.push({ content: message }); // Ajoute le message à la liste des messages
+      // Envoie le message au processus principal via IPC
+      window.IPC.sendMessageToMain(message);
+
+      // Affichage du message dans la console du navigateur
+      console.log("Message sent:", message);
+
+      // Ajoute le message à la liste des messages
+      //this.messages.push({ content: message });
     }
   }
 };
 </script>
 
 <style scoped>
-/* Ajoute ici tes styles CSS pour la page de chat */
 </style>

@@ -13,7 +13,7 @@ export default {
   props: {
     messages: {
       type: Array,
-      default: () => []
+      default: () => [] // Définit un tableau vide comme valeur par défaut
     }
   }
 };
