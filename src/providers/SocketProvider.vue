@@ -9,7 +9,6 @@ export default {
     // Crée une connexion WebSocket avec le serveur
     const socket = io("ws://localhost:3000");
 
-
     socket.on("connect", () => {
       console.log("Connected to server");
     });

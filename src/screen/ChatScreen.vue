@@ -17,11 +17,13 @@ export default {
   mounted() {
     const ipc = inject('ipc'); // Récupère la connexion IPC fourni par IpcProvider
 
+    /***** abstraire IPC dans ChatScreen.vue *****/
     // Écoute des messages IPC du processus principal
     window.IPC.onMessageFromMain((message) => {
       console.log("Received message from main:", message);
       // Gère le message reçu du processus principal
 
+      // Ajoute le message à la liste des messages
       this.messages.push({ content: message });
     });
   },
@@ -49,6 +51,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 </style>

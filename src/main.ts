@@ -2,6 +2,13 @@ import {app, BrowserWindow, ipcMain} from 'electron';
 import path from 'path';
 import {io, Socket} from "socket.io-client";
 
+/******
+Le rôle du processus principal est de créer et de gérer les fenêtres d'application avec le module BrowserWindow.
+Chaque instance de la classe BrowserWindow crée une fenêtre d’application qui charge une page Web
+dans un processus de rendu distinct. Vous pouvez interagir avec ce contenu Web à partir du processus principal
+à l’aide de l’objet webContents de la fenêtre.
+*****/
+
 // Dans ce fichier, vous pouvez inclure le reste du processus principal spécifique de votre application
 // Vous pouvez également les placer dans des fichiers séparés et les importer ici.
 
