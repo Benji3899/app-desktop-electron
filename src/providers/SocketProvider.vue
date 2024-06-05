@@ -1,4 +1,7 @@
 <template>
+  <div>
+    <slot></slot>
+  </div>
 </template>
 
 <script>
@@ -13,12 +16,16 @@ export default {
       console.log("Connected to server");
     });
 
-    socket.on("message", (event) => {
-      console.log("Received message:", event.data);
-    });
-
     socket.on("disconnect", () => {
       console.log("Disconnected from server");
+    });
+
+    // socket.on("message", (event) => {
+    //   console.log("Received message:", event.data);
+    // });
+
+    socket.on("message", (message) => {
+      console.log("Received message:", message);
     });
 
     socket.on("error", (error) => {

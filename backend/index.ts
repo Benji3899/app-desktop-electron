@@ -22,10 +22,19 @@ function main(){
             io.emit("message", message);
         });
     });
-    // Démarre le serveur sur le port 3000
-    io.listen(3000);
 
-    console.log("Server started on port 3000")
+    // Démarre le serveur sur le port 3000
+    // io.listen(3000);
+    // console.log("Server started on port 3000")
+    // @ts-ignore
+    io.listen(3000, () => {
+        console.log("Server started on port 3000");
+    });
+
+    io.on('error', (error) => {
+        console.error('Socket.io error:', error);
+    });
+
 }
 
 // Appelle la fonction principale pour démarrer le serveur
