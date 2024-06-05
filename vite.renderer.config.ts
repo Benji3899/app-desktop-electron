@@ -19,6 +19,9 @@ export default defineConfig((env) => {
     },
     plugins: [pluginExposeRenderer(name), vue()],
     resolve: {
+      alias: {
+        'vue': 'vue/dist/vue.esm-bundler.js',
+      },
       preserveSymlinks: true,
     },
     clearScreen: false,

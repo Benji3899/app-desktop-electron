@@ -12,7 +12,6 @@ dans un processus de rendu distinct. Vous pouvez interagir avec ce contenu Web �
 // Dans ce fichier, vous pouvez inclure le reste du processus principal spécifique de votre application
 // Vous pouvez également les placer dans des fichiers séparés et les importer ici.
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
 // Quitte l'application si elle est démarrée en mode 'squirrel'
 if (require('electron-squirrel-startup')) {
     app.quit();
@@ -68,8 +67,6 @@ const createWindow = () => {
 app.on('ready', createWindow);
 
 // Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 
 // app.on('window-all-closed', () => {
 //     if (process.platform !== 'darwin') {

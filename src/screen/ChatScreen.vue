@@ -9,61 +9,60 @@
 </template>
 
 <script>
+import { defineComponent, inject, ref } from 'vue';
 import MessageList from '../components/MessageList.vue';
 import MessageInput from '../components/MessageInput.vue';
-import { inject } from 'vue';
 
-export default {
-  // components: {MessageList},
+export default defineComponent({
   components: {
     MessageList,
     MessageInput
   },
-  data() {
-    return {
-      messages: [] // Initialise la liste des messages
-    };
-  },
-  created() {
-    const socket = inject('socket'); // Récupère la connexion Socket.io fournie par SocketProvider
+  setup() {
+    // Récupère la connexion Socket.io fournie par SocketProvider
+    const socket = inject('socket');
 
+    // Vérifie si la connexion Socket.io est disponible
     if (!socket) {
       console.error("Socket not found!");
       return;
     }
 
+    // Initialise la liste des messages
+    const messages = ref([]);
+
+    // Écoute les messages WebSocket
     socket.on('message', (message) => {
-      this.messages.push({ content: message });
+      messages.value.push({ content: message });
       console.log('Received message:', message);
     });
-  },
-  methods: {
-    handleMessageSent(message) {
-      const socket = inject('socket'); // Récupère la connexion Socket.io
+
+    // Gère l'envoi de messages
+    const handleMessageSent = (message) => {
       if (socket) {
         socket.emit('message', message); // Envoie le message au serveur via Socket.io
 
         // Ajoute le message à la liste des messages localement
-        this.messages.push({content: message});
+        messages.value.push({ content: message });
         console.log('Message sent:', message);
       }
-    }
-  }
-};
+    };
 
-//   mounted() {
-//     const ipc = inject('ipc'); // Récupère la connexion IPC fourni par IpcProvider
+    return {
+      messages,
+      handleMessageSent
+    };
+  }
+});
+
+
 //
-//     /***** abstraire IPC dans ChatScreen.vue *****/
-//     // Écoute des messages IPC du processus principal
-//     window.IPC.onMessageFromMain((message) => {
-//       console.log("Received message from main:", message);
-//       // Gère le message reçu du processus principal
-//
-//       // Ajoute le message à la liste des messages
-//       this.messages.push({ content: message });
-//     });
-//   },
+// import MessageList from '../components/MessageList.vue';
+// import MessageInput from '../components/MessageInput.vue';
+// import { inject } from 'vue';
+
+// export default {
+//   // components: {MessageList},
 //   components: {
 //     MessageList,
 //     MessageInput
@@ -73,20 +72,34 @@ export default {
 //       messages: [] // Initialise la liste des messages
 //     };
 //   },
+//   created() {
+//     const socket = inject('socket'); // Récupère la connexion Socket.io fournie par SocketProvider
 //
+//     if (!socket) {
+//       console.error("Socket not found!");
+//       return;
+//     }
+//
+//     socket.on('message', (message) => {
+//       this.messages.push({ content: message });
+//       console.log('Received message:', message);
+//     });
+//   },
 //   methods: {
 //     handleMessageSent(message) {
-//       // Envoie le message au processus principal via IPC
-//       window.IPC.sendMessageToMain(message);
+//       const socket = inject('socket'); // Récupère la connexion Socket.io
+//       if (socket) {
+//         socket.emit('message', message); // Envoie le message au serveur via Socket.io
 //
-//       // Affichage du message dans la console du navigateur
-//       console.log("Message sent:", message);
-//
-//       // Ajoute le message à la liste des messages
-//       //this.messages.push({ content: message });
+//         // Ajoute le message à la liste des messages localement
+//         this.messages.push({content: message});
+//         console.log('Message sent:', message);
+//       }
 //     }
 //   }
 // };
+
+
 </script>
 
 
