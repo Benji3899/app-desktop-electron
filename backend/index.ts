@@ -1,6 +1,8 @@
 import {Server} from "socket.io";
 import User from "./user";
 import Room from "./room";
+// @ts-ignore
+import Message from "./message";
 
 // console.log("hello world");
 // Fonction principale pour démarrer le serveur
@@ -12,8 +14,16 @@ import Room from "./room";
         },
     });
 
-    // Liste des salons
-    const rooms: { [roomId: string]: Room } = {};
+// Liste des salons et structure pour stocker les messages de chaque salle
+const rooms: { [roomId: string]: Room } = {};
+const roomsMessages: { [roomId: string]: Message[] } = {
+    "room1": [],
+    "room2": [],
+    "room3": [],
+    "room4": [],
+    "room5": [],
+    // Ajoutez d'autres salles de discussion au besoin
+};
 
 function main() {
     // Écoute les connexions entrantes
@@ -34,8 +44,12 @@ function main() {
             room.addUser(user);
             console.log(`${user.name} joined room ${roomId}`);
             socket.join(roomId);
+
+            // Envoyer les messages existants de la salle à l'utilisateur
+            socket.emit("roomMessages", roomsMessages[roomId]);
         });
 
+        // Gestion de l'événement pour quitter une salle
         socket.on("leaveRoom", (roomId: string) => {
             const room = rooms[roomId];
             if (room) {
@@ -48,6 +62,12 @@ function main() {
         // Gestion des messages entrants sur la connexion
         socket.on("message", (message) => {
             console.log('received message:', message);
+
+            if (roomsMessages[message.roomId]) {
+                roomsMessages[message.roomId].push(message);
+            } else {
+                roomsMessages[message.roomId] = [message];
+            }
 
             // Émet le message à tous les sockets connectés dans la même salle
             io.to(message.roomId).emit("message", message);
@@ -65,32 +85,6 @@ function main() {
     });
 }
 
-// // Écoute les connexions entrantes
-//     io.on("connection", (socket)=>{
-//        console.log("New connection:", socket.id)
-//
-//         // Écoute les messages entrants sur la connexion
-//         socket.on("message", (message)=> {
-//             console.log('received message:', message);
-//
-//             // Émet le message à tous les sockets connectés
-//             io.emit("message", message);
-//         });
-//     });
-//
-//     // Démarre le serveur sur le port 3000
-//     // io.listen(3000);
-//     // console.log("Server started on port 3000")
-//     // @ts-ignore
-//     io.listen(3000, () => {
-//         console.log("Server started on port 3000");
-//     });
-//
-//     io.on('error', (error) => {
-//         console.error('Socket.io error:', error);
-//     });
-//
-// }
 
 // Appelle la fonction principale pour démarrer le serveur
 main();

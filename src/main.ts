@@ -27,6 +27,8 @@ const createWindow = () => {
         height: 600,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
+            contextIsolation: false, // Activer l'isolation du contexte pour les fenêtres de rendu
+            nodeIntegration: true, // Activer l'intégration de Node.js pour les fenêtres de rendu
         },
     });
 
@@ -60,13 +62,19 @@ const createWindow = () => {
         console.log('BAC sent message:', message);
         socket.emit("message", message);
     });
+
+    ipcMain.on("join-room", (_, roomId) => {
+        socket.emit("joinRoom", roomId);
+    });
+
+    ipcMain.on("leave-room", (_, roomId) => {
+        socket.emit("leaveRoom", roomId);
+    });
 };
 
 // Crée la fenêtre lorsque Electron a fini l'initialisation
-// INFO => Certaines API ne peuvent être utilisées qu'après cet événement.
 app.on('ready', createWindow);
 
-// Quit when all windows are closed, except on macOS. There, it's common
 
 // app.on('window-all-closed', () => {
 //     if (process.platform !== 'darwin') {
